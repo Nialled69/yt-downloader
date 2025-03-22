@@ -12,14 +12,15 @@
 </head>
 <body>
     <main class="main">
+
         <div class="background">
             <div class="container-fluid home-intro">
                 <div class="home-content">
-                <div style="font-size: 50px; color: beige; position: absolute; top: 50px; left: 50px;">Youtube Video Downloader</div>
+                <div style="font-size: 50px; color: rgb(238, 238, 183); position: absolute; top: 50px; left: 50px;">Youtube Video Downloader</div>
                 <div class="searchbar">
                     <div class="item-input" style="display: inline;">
                         <input type="text" id="URL"
-                        placeholder="Enter the Youtube URL"
+                        placeholder="Enter the Youtube URL or maybe just a keyword "
                         class="scrap-input-box"/>
                         <button class="search-btn">Go</button>
                     </div>
@@ -29,6 +30,30 @@
                 </div>
             </div>
         </div>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe src="" id = "yt_preview" frameborder="0"></iframe>
+                <p id="modal-text">
+                    <div class="download-options">
+                            <select id="format-select">
+                                <option value="mp4">MP4</option>
+                                <option value="mkv">MKV</option>
+                                <option value="mp3">MP3</option>
+                                <option value="wav">WAV</option>
+                                <option value="flac">FLAC</option>
+                            </select> 
+                            format at 
+                            <select id="quality-select">
+                                <!-- ... -->
+                            </select>.
+                        
+                    </div>
+                </p>
+            </div>
+        </div>
+
         <section class="about" id="about">
             <div class="row">
                 <div class="content">
@@ -41,10 +66,9 @@
                 </div>
             </div>
         </section>
+
     </main>
 
-    <script src="script.js">
-        
-    </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
