@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const qualitySelect = document.getElementById("quality-select");
     const videoQualities = ["240p", "360p", "480p", "720p", "1080p"];
     const audioBitrates = ["128kbps", "192kbps", "256kbps", "320kbps"];
+    const downloadBtn = document.getElementById("download-btn");
+    const progressContainer = document.getElementById("progress-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+    var vidID = "";
 
     function updateQualityOptions(format) {
         qualitySelect.innerHTML = "";
@@ -53,6 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (query.startsWith("https://")) {
             const videoId = getVideoId(query);
+            vidID = videoId;
+            console.log(vidID);
             if (videoId) openModal(videoId);
             else alert("Invalid YouTube URL");
         } else {
@@ -60,7 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch(`http://localhost:3000/search?query=${encodeURIComponent(query)}`);
                 const data = await response.json();
                 if (data.videoId) {
+                    vidID = data.videoId;
                     openModal(data.videoId);
+                    console.log(vidID);
                 } else {
                     alert("No videos found");
                 }
@@ -73,5 +82,65 @@ document.addEventListener("DOMContentLoaded", () => {
     closeBtn.addEventListener("click", closeModal);
     window.addEventListener("click", (event) => {
         if (event.target === modal) closeModal();
+    });
+
+    downloadBtn.addEventListener("click", async () => {
+        downloadBtn.style.display = "none";
+        progressContainer.style.display = "block";
+
+        const eventSource = new EventSource("/progress");
+
+        eventSource.onmessage = (event) => {
+            const data = event.data.trim();
+
+            if (data === "complete") {
+                progressBar.style.width = "100%";
+                progressText.innerText = "Encryption Complete! 🎉";
+                setTimeout(() => {
+                    progressContainer.style.display = "none";
+                }, 2000);
+                eventSource.close();
+                return;
+            }
+
+            const progress = parseInt(data);
+            if (!isNaN(progress)) {
+                progressBar.style.transition = "width 0.4s ease-in-out"; // Smooth animation
+                progressBar.style.width = `${progress}%`;
+                progressText.innerText = `Encrypting: ${progress}%`;
+            }
+        };
+
+        eventSource.onerror = (error) => {
+            console.error("Progress tracking error:", error);
+            eventSource.close();
+        };
+
+        try {
+            const response = await fetch("/download", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: vidID }),
+            });
+        
+            if (!response.ok) throw new Error("Download request failed");
+        
+            const data = await response.json();
+            if (data.path) {
+                // Trigger the download in the browser
+                const a = document.createElement("a");
+                a.href = data.path;
+                a.download = `${vidID}_${Date.now()}.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                console.error("No file path received.");
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        
     });
 });

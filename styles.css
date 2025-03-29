@@ -201,6 +201,36 @@ body {
     border: 1px solid #ccc;
 }
 
+.dwnld-btn {
+    height: 60px;
+    width: 140px;
+    background: #ee5e5e;
+    border: none;
+    border-radius: 30px; /* Smooth rounded edges */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.3s;
+    margin-top: 10px;
+    /*display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;*/
+}
+
+.dwnld-btn:hover {
+    background: #e23030;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05); 
+}
+
+.dwnld-btn:active {
+    transform: scale(0.95); 
+}
+
 #quality-select {
     margin-left: 10px;
 }
