@@ -87,12 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
     downloadBtn.addEventListener("click", async () => {
         downloadBtn.style.display = "none";
         progressContainer.style.display = "block";
-
+        
         const eventSource = new EventSource("/progress");
-
+        
         eventSource.onmessage = (event) => {
             const data = event.data.trim();
-
+        
             if (data === "complete") {
                 progressBar.style.width = "100%";
                 progressText.innerText = "Encryption Complete! 🎉";
@@ -102,15 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 eventSource.close();
                 return;
             }
-
+        
             const progress = parseInt(data);
             if (!isNaN(progress)) {
-                progressBar.style.transition = "width 0.4s ease-in-out"; // Smooth animation
+                progressBar.style.transition = "width 0.4s ease-in-out";
                 progressBar.style.width = `${progress}%`;
                 progressText.innerText = `Encrypting: ${progress}%`;
             }
         };
-
+        
         eventSource.onerror = (error) => {
             console.error("Progress tracking error:", error);
             eventSource.close();

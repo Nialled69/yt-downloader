@@ -11,7 +11,7 @@ import { youtubeDl } from 'youtube-dl-exec';
 const app = express();
 const PORT = 3000;
 let globalProgress = 0;
-
+let progressInterval;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,6 +46,9 @@ app.post("/download", async (req, res) => {
 
         const outputFileName = `video_${Date.now()}.mp4`;
         const outputPath = path.join(__dirname, "downloads", outputFileName);
+        progressInterval = setInterval(() => {
+            if (globalProgress < 95) globalProgress += 5;
+        }, 4000);
 
         const ytDlp = spawn("yt-dlp", [
             url,
@@ -65,8 +68,9 @@ app.post("/download", async (req, res) => {
         ytDlp.stderr.on("data", (data) => console.error("Error:", data.toString()));
 
         ytDlp.on("close", (code) => {
-            globalProgress = 100;
-            console.log(`Download complete! yt-dlp exited with code ${code}`);
+            clearInterval(progressInterval); 
+            globalProgress = 100; 
+            console.log(`Download complete!`);
             res.json({ path: `/downloads/${outputFileName}` });
         });
 
@@ -109,7 +113,7 @@ app.use("/downloads", express.static(path.join(__dirname, "downloads")));
             };
         
             const interval = setInterval(sendProgress, 500);
-            sendProgress(); // Send first update immediately
+            sendProgress();
         
             req.on("close", () => clearInterval(interval));
         });

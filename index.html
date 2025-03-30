@@ -52,10 +52,11 @@
                     </div>
                 </p>
                 <button id="download-btn" class="dwnld-btn">Download</button>
-                <div id="progress-container" style="display: none; width: 100%; margin-top: 10px;">
-                    <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
-                    <p id="progress-text" style="text-align: center; font-weight: bold;">0%</p>
+                <div id="progress-container" style="display: none; width: 100%; background-color: #eee; border-radius: 5px; overflow: hidden; position: relative; height: 25px;">
+                    <div id="progress-bar" style="width: 0%; height: 100%; background-color: #4caf50; transition: width 0.4s ease-in-out;"></div>
+                    <p id="progress-text" style="position: absolute; width: 100%; text-align: center; margin: 0; line-height: 25px; font-weight: bold;">0%</p>
                 </div>
+                
             </div>
         </div>
 
