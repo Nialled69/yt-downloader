@@ -40,7 +40,7 @@ app.get("/search", async (req, res) => {
 app.post("/download", async (req, res) => {
     try {
         const url = req.body.url;
-        globalProgress = 0; // Reset progress
+        globalProgress = 0;
 
         if (!url) return res.status(400).json({ error: "No URL provided" });
 
@@ -48,7 +48,7 @@ app.post("/download", async (req, res) => {
         const outputPath = path.join(__dirname, "downloads", outputFileName);
         progressInterval = setInterval(() => {
             if (globalProgress < 95) globalProgress += 5;
-        }, 4000);
+        }, 2000);
 
         const ytDlp = spawn("yt-dlp", [
             url,

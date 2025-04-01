@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
             if (data === "complete") {
                 progressBar.style.width = "100%";
-                progressText.innerText = "Encryption Complete! 🎉";
+                progressText.innerText = "Downloading !";
                 setTimeout(() => {
                     progressContainer.style.display = "none";
                 }, 2000);
@@ -127,13 +127,15 @@ document.addEventListener("DOMContentLoaded", () => {
         
             const data = await response.json();
             if (data.path) {
-                // Trigger the download in the browser
                 const a = document.createElement("a");
                 a.href = data.path;
                 a.download = `${vidID}_${Date.now()}.mp4`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                setTimeout(() => {
+                    window.location.href = "http://localhost:3000";
+                }, 4000);             
             } else {
                 console.error("No file path received.");
             }
